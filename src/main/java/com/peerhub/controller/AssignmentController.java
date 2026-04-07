@@ -78,11 +78,34 @@ public class AssignmentController {
             if (project == null) {
                 return ResponseEntity.badRequest().body(Map.of("error", "Selected project was not found"));
             }
-            if (!instructorId.equals(project.getInstructorId())) {
-                return ResponseEntity.status(403).body(Map.of("error", "You can only assign projects in your course"));
-            }
             if (project.getOwnerStudentId() == null || !reviewing.getId().equals(project.getOwnerStudentId())) {
                 return ResponseEntity.badRequest().body(Map.of("error", "Selected project must belong to the student being reviewed"));
+            }
+
+            // Backfill legacy projects that existed before instructor/course metadata was enforced.
+            boolean changed = false;
+            if (project.getInstructorId() == null) {
+                project.setInstructorId(instructorId);
+                changed = true;
+            } else if (!instructorId.equals(project.getInstructorId())) {
+                return ResponseEntity.status(403).body(Map.of("error", "Selected project belongs to a different instructor"));
+            }
+
+            String selectedCourse = nonBlank(request.getCourseName(), reviewing.getCourseName());
+            if (project.getCourseName() == null || project.getCourseName().isBlank()) {
+                project.setCourseName(selectedCourse);
+                changed = true;
+            } else if (selectedCourse != null && !selectedCourse.isBlank() && !selectedCourse.equalsIgnoreCase(project.getCourseName())) {
+                return ResponseEntity.badRequest().body(Map.of("error", "Selected project is not in the chosen course"));
+            }
+
+            if (project.getSemester() == null || project.getSemester().isBlank()) {
+                project.setSemester(nonBlank(request.getSemester(), reviewing.getSemester()));
+                changed = true;
+            }
+
+            if (changed) {
+                project = projectRepository.save(project);
             }
         } else {
             if (request.getProject() == null || request.getProject().isBlank()) {

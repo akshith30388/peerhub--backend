@@ -18,8 +18,8 @@ public class SettingService {
         this.settingRepository = settingRepository;
     }
 
-    public Map<String, String> getAllSettings() {
-        return settingRepository.findAll().stream()
+    public Map<String, String> getAllSettings(Long instructorId) {
+        return settingRepository.findByInstructorIdOrderByIdAsc(instructorId).stream()
                 .collect(Collectors.toMap(
                         Setting::getSettingKey,
                         Setting::getSettingValue,
@@ -29,13 +29,14 @@ public class SettingService {
     }
 
     @Transactional
-    public Map<String, String> updateSettings(Map<String, String> updates) {
+    public Map<String, String> updateSettings(Long instructorId, Map<String, String> updates) {
         updates.forEach((key, value) -> {
-            Setting setting = settingRepository.findBySettingKey(key)
+            Setting setting = settingRepository.findByInstructorIdAndSettingKey(instructorId, key)
                     .orElse(new Setting(key, value));
             setting.setSettingValue(value);
+            setting.setInstructorId(instructorId);
             settingRepository.save(setting);
         });
-        return getAllSettings();
+        return getAllSettings(instructorId);
     }
 }

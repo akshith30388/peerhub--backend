@@ -3,10 +3,14 @@ package com.peerhub.dto;
 import java.util.Map;
 
 public class ReviewRequest {
+    private Long assignmentId;
     private String project;
     private int score;
     private String comment;
     private Map<String, Integer> ratings;
+
+    public Long getAssignmentId() { return assignmentId; }
+    public void setAssignmentId(Long assignmentId) { this.assignmentId = assignmentId; }
 
     public String getProject() { return project; }
     public void setProject(String project) { this.project = project; }

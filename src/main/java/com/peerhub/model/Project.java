@@ -31,6 +31,17 @@ public class Project {
     @JsonProperty("desc")
     private String description;
 
+    @Column(name = "owner_student_id")
+    private Long ownerStudentId;
+
+    @Column(name = "instructor_id")
+    private Long instructorId;
+
+    @Column(name = "course_name")
+    private String courseName;
+
+    private String semester;
+
     public Project() {}
 
     public Project(String name, int members, String due, int progress, int reviews, String status, String description) {
@@ -60,4 +71,12 @@ public class Project {
     @JsonProperty("desc")
     public String getDescription() { return description; }
     public void setDescription(String description) { this.description = description; }
+    public Long getOwnerStudentId() { return ownerStudentId; }
+    public void setOwnerStudentId(Long ownerStudentId) { this.ownerStudentId = ownerStudentId; }
+    public Long getInstructorId() { return instructorId; }
+    public void setInstructorId(Long instructorId) { this.instructorId = instructorId; }
+    public String getCourseName() { return courseName; }
+    public void setCourseName(String courseName) { this.courseName = courseName; }
+    public String getSemester() { return semester; }
+    public void setSemester(String semester) { this.semester = semester; }
 }

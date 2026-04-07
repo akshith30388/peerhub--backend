@@ -1,6 +1,8 @@
 package com.peerhub.controller;
 
 import com.peerhub.service.SettingService;
+import io.jsonwebtoken.Claims;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,13 +19,18 @@ public class SettingController {
     }
 
     @GetMapping
-    public Map<String, String> getAll() {
-        return settingService.getAllSettings();
+    @PreAuthorize("hasRole('INSTRUCTOR')")
+    public Map<String, String> getAll(Authentication auth) {
+        Claims claims = (Claims) auth.getPrincipal();
+        Number idNum = (Number) claims.get("id");
+        return settingService.getAllSettings(idNum.longValue());
     }
 
     @PutMapping
     @PreAuthorize("hasRole('INSTRUCTOR')")
-    public Map<String, String> update(@RequestBody Map<String, String> updates) {
-        return settingService.updateSettings(updates);
+    public Map<String, String> update(@RequestBody Map<String, String> updates, Authentication auth) {
+        Claims claims = (Claims) auth.getPrincipal();
+        Number idNum = (Number) claims.get("id");
+        return settingService.updateSettings(idNum.longValue(), updates);
     }
 }

@@ -23,6 +23,20 @@ public class Review {
 
     private String color;
 
+    @Column(name = "recipient_student_id")
+    private Long recipientStudentId;
+
+    @Column(name = "reviewer_student_id")
+    private Long reviewerStudentId;
+
+    @Column(name = "instructor_id")
+    private Long instructorId;
+
+    @Column(name = "course_name")
+    private String courseName;
+
+    private String semester;
+
     public Review() {}
 
     public Review(String reviewer, String initials, int score, int stars, String project, String comment, String color) {
@@ -51,4 +65,14 @@ public class Review {
     public void setComment(String comment) { this.comment = comment; }
     public String getColor() { return color; }
     public void setColor(String color) { this.color = color; }
+    public Long getRecipientStudentId() { return recipientStudentId; }
+    public void setRecipientStudentId(Long recipientStudentId) { this.recipientStudentId = recipientStudentId; }
+    public Long getReviewerStudentId() { return reviewerStudentId; }
+    public void setReviewerStudentId(Long reviewerStudentId) { this.reviewerStudentId = reviewerStudentId; }
+    public Long getInstructorId() { return instructorId; }
+    public void setInstructorId(Long instructorId) { this.instructorId = instructorId; }
+    public String getCourseName() { return courseName; }
+    public void setCourseName(String courseName) { this.courseName = courseName; }
+    public String getSemester() { return semester; }
+    public void setSemester(String semester) { this.semester = semester; }
 }

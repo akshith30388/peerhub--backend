@@ -27,6 +27,17 @@ public class User {
     @Column(nullable = false, length = 5)
     private String initials;
 
+    @Column(name = "instructor_id")
+    private Long instructorId;
+
+    @Column(name = "instructor_name")
+    private String instructorName;
+
+    @Column(name = "course_name")
+    private String courseName;
+
+    private String semester;
+
     public User() {}
 
     public User(String email, String password, String role, String name, String initials) {
@@ -49,4 +60,12 @@ public class User {
     public void setName(String name) { this.name = name; }
     public String getInitials() { return initials; }
     public void setInitials(String initials) { this.initials = initials; }
+    public Long getInstructorId() { return instructorId; }
+    public void setInstructorId(Long instructorId) { this.instructorId = instructorId; }
+    public String getInstructorName() { return instructorName; }
+    public void setInstructorName(String instructorName) { this.instructorName = instructorName; }
+    public String getCourseName() { return courseName; }
+    public void setCourseName(String courseName) { this.courseName = courseName; }
+    public String getSemester() { return semester; }
+    public void setSemester(String semester) { this.semester = semester; }
 }

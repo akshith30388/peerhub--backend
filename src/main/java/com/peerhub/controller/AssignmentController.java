@@ -81,6 +81,9 @@ public class AssignmentController {
             if (!instructorId.equals(project.getInstructorId())) {
                 return ResponseEntity.status(403).body(Map.of("error", "You can only assign projects in your course"));
             }
+            if (project.getOwnerStudentId() == null || !reviewing.getId().equals(project.getOwnerStudentId())) {
+                return ResponseEntity.badRequest().body(Map.of("error", "Selected project must belong to the student being reviewed"));
+            }
         } else {
             if (request.getProject() == null || request.getProject().isBlank()) {
                 return ResponseEntity.badRequest().body(Map.of("error", "Project is required"));

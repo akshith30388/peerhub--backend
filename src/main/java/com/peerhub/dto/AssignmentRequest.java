@@ -8,6 +8,7 @@ public class AssignmentRequest {
     private String reviewing;
     private String project;
     private String due;
+    private String status;
     private String courseName;
     private String semester;
 
@@ -26,6 +27,8 @@ public class AssignmentRequest {
     public void setProject(String project) { this.project = project; }
     public String getDue() { return due; }
     public void setDue(String due) { this.due = due; }
+    public String getStatus() { return status; }
+    public void setStatus(String status) { this.status = status; }
     public String getCourseName() { return courseName; }
     public void setCourseName(String courseName) { this.courseName = courseName; }
     public String getSemester() { return semester; }

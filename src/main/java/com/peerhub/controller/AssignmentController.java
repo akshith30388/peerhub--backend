@@ -141,6 +141,53 @@ public class AssignmentController {
         return ResponseEntity.status(201).body(saved);
     }
 
+    @PutMapping("/{id}")
+    @PreAuthorize("hasRole('INSTRUCTOR')")
+    public ResponseEntity<?> update(@PathVariable Long id,
+                                    @RequestBody AssignmentRequest request,
+                                    Authentication auth) {
+        Claims claims = (Claims) auth.getPrincipal();
+        Number instructorIdNum = (Number) claims.get("id");
+        Long instructorId = instructorIdNum.longValue();
+
+        Assignment assignment = assignmentRepository.findById(id).orElse(null);
+        if (assignment == null) {
+            return ResponseEntity.status(404).body(Map.of("error", "Assignment not found"));
+        }
+        if (!instructorId.equals(assignment.getInstructorId())) {
+            return ResponseEntity.status(403).body(Map.of("error", "You can only update your own assignments"));
+        }
+
+        if (request.getDue() != null && !request.getDue().isBlank()) {
+            assignment.setDue(request.getDue());
+        }
+        if (request.getStatus() != null && !request.getStatus().isBlank()) {
+            assignment.setStatus(request.getStatus().trim().toLowerCase());
+        }
+
+        Assignment updated = assignmentRepository.save(assignment);
+        return ResponseEntity.ok(updated);
+    }
+
+    @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('INSTRUCTOR')")
+    public ResponseEntity<?> delete(@PathVariable Long id, Authentication auth) {
+        Claims claims = (Claims) auth.getPrincipal();
+        Number instructorIdNum = (Number) claims.get("id");
+        Long instructorId = instructorIdNum.longValue();
+
+        Assignment assignment = assignmentRepository.findById(id).orElse(null);
+        if (assignment == null) {
+            return ResponseEntity.status(404).body(Map.of("error", "Assignment not found"));
+        }
+        if (!instructorId.equals(assignment.getInstructorId())) {
+            return ResponseEntity.status(403).body(Map.of("error", "You can only delete your own assignments"));
+        }
+
+        assignmentRepository.delete(assignment);
+        return ResponseEntity.ok(Map.of("message", "Assignment deleted"));
+    }
+
     private String nonBlank(String first, String fallback) {
         if (first != null && !first.isBlank()) {
             return first;

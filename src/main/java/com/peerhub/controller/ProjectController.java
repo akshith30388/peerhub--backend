@@ -90,4 +90,57 @@ public class ProjectController {
                 })
                 .orElseGet(() -> ResponseEntity.status(404).body(Map.of("error", "Student not found")));
     }
+
+    @PutMapping("/{id}")
+    @PreAuthorize("hasRole('STUDENT')")
+    public ResponseEntity<?> update(@PathVariable Long id, @RequestBody Project request, Authentication auth) {
+        Claims claims = (Claims) auth.getPrincipal();
+        Number studentIdNum = (Number) claims.get("id");
+        Long studentId = studentIdNum.longValue();
+
+        Project project = projectRepository.findById(id).orElse(null);
+        if (project == null) {
+            return ResponseEntity.status(404).body(Map.of("error", "Project not found"));
+        }
+        if (project.getOwnerStudentId() == null || !studentId.equals(project.getOwnerStudentId())) {
+            return ResponseEntity.status(403).body(Map.of("error", "You can only update your own projects"));
+        }
+
+        if (request.getName() != null && !request.getName().isBlank()) {
+            project.setName(request.getName().trim());
+        }
+        if (request.getDescription() != null) {
+            project.setDescription(request.getDescription());
+        }
+        if (request.getDue() != null) {
+            project.setDue(request.getDue());
+        }
+        if (request.getMembers() > 0) {
+            project.setMembers(request.getMembers());
+        }
+        if (request.getStatus() != null && !request.getStatus().isBlank()) {
+            project.setStatus(request.getStatus());
+        }
+
+        return ResponseEntity.ok(projectRepository.save(project));
+    }
+
+    @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('STUDENT')")
+    public ResponseEntity<?> delete(@PathVariable Long id, Authentication auth) {
+        Claims claims = (Claims) auth.getPrincipal();
+        Number studentIdNum = (Number) claims.get("id");
+        Long studentId = studentIdNum.longValue();
+
+        Project project = projectRepository.findById(id).orElse(null);
+        if (project == null) {
+            return ResponseEntity.status(404).body(Map.of("error", "Project not found"));
+        }
+        if (project.getOwnerStudentId() == null || !studentId.equals(project.getOwnerStudentId())) {
+            return ResponseEntity.status(403).body(Map.of("error", "You can only delete your own projects"));
+        }
+
+        projectRepository.delete(project);
+        return ResponseEntity.ok(Map.of("message", "Project deleted"));
+    }
 }

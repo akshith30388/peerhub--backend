@@ -3,14 +3,19 @@ package com.peerhub.model;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "settings")
+@Table(
+    name = "settings",
+    uniqueConstraints = {
+        @UniqueConstraint(name = "uk_settings_instructor_key", columnNames = {"instructor_id", "setting_key"})
+    }
+)
 public class Setting {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "setting_key", unique = true, nullable = false)
+    @Column(name = "setting_key", nullable = false)
     private String settingKey;
 
     @Column(name = "setting_value", columnDefinition = "TEXT")

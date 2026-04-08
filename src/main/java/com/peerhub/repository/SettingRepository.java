@@ -8,5 +8,6 @@ import java.util.Optional;
 
 public interface SettingRepository extends JpaRepository<Setting, Long> {
     Optional<Setting> findByInstructorIdAndSettingKey(Long instructorId, String settingKey);
+    Optional<Setting> findBySettingKey(String settingKey);
     List<Setting> findByInstructorIdOrderByIdAsc(Long instructorId);
 }

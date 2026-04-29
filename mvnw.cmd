@@ -94,7 +94,6 @@ cd "%EXEC_DIR%"
 
 IF NOT EXIST "%MAVEN_PROJECTBASEDIR%\.mvn\wrapper\maven-wrapper.jar" (
     set WRAPPER_LAUNCHER=org.apache.maven.wrapper.MavenWrapperMain
-    %MAVEN_PROJECTBASEDIR%\.mvn\wrapper\maven-wrapper.jar
     if not exist "%MAVEN_PROJECTBASEDIR%\.mvn\wrapper" mkdir "%MAVEN_PROJECTBASEDIR%\.mvn\wrapper"
 
     @REM Download maven-wrapper.jar
@@ -134,7 +133,7 @@ IF NOT EXIST %WRAPPER_JAR% (
 @REM work with both Windows and non-Windows executions.
 set MAVEN_CMD_LINE_ARGS=%*
 
-%JAVA_HOME%\bin\java.exe ^
+"%JAVA_HOME%\bin\java.exe" ^
   %JVM_CONFIG_MAVEN_PROPS% ^
   %MAVEN_OPTS% ^
   %MAVEN_DEBUG_OPTS% ^

@@ -30,6 +30,10 @@ public class SettingService {
 
     @Transactional
     public Map<String, String> updateSettings(Long instructorId, Map<String, String> updates) {
+        if (updates == null || updates.isEmpty()) {
+            return getAllSettings(instructorId);
+        }
+
         updates.forEach((key, value) -> {
             String safeKey = key == null ? "" : key.trim();
             if (safeKey.isBlank()) {
@@ -37,7 +41,9 @@ public class SettingService {
             }
 
             Setting setting = settingRepository.findByInstructorIdAndSettingKey(instructorId, safeKey)
-                    .orElseGet(() -> settingRepository.findBySettingKey(safeKey).orElse(new Setting(safeKey, value)));
+                    .orElseGet(() -> settingRepository
+                            .findByInstructorIdIsNullAndSettingKey(safeKey)
+                            .orElseGet(Setting::new));
 
             // Claim legacy/global row for this instructor to avoid duplicate-key inserts.
             setting.setSettingKey(safeKey);

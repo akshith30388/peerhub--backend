@@ -1,0 +1,7 @@
+target/
+.m2/
+.metadata/
+.idea/
+*.iml
+.DS_Store
+Thumbs.db

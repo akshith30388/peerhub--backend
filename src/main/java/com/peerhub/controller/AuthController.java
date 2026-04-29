@@ -67,7 +67,10 @@ public class AuthController {
 
     @GetMapping("/me")
     public ResponseEntity<?> getMe(Authentication authentication) {
-        Claims claims = (Claims) authentication.getPrincipal();
+        if (authentication == null || !(authentication.getPrincipal() instanceof Claims claims)) {
+            return ResponseEntity.status(401).body(Map.of("error", "Unauthorized"));
+        }
+
         Number idNum = (Number) claims.get("id");
         UserDTO user = new UserDTO(
                 idNum.longValue(),
